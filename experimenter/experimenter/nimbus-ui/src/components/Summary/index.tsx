@@ -30,9 +30,16 @@ import {
 type SummaryProps = {
   experiment: getExperiment_experimentBySlug;
   refetch?: () => Promise<unknown>;
+  showRecipe: boolean;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-const Summary = ({ experiment, refetch }: SummaryProps) => {
+const Summary = ({
+  experiment,
+  refetch,
+  showRecipe,
+  setShowRecipe,
+}: SummaryProps) => {
   const takeawaysProps = useTakeaways(experiment, refetch);
   const status = getStatus(experiment);
   const {
@@ -150,7 +157,7 @@ const Summary = ({ experiment, refetch }: SummaryProps) => {
       <TableOverview {...{ experiment }} />
       <TableRiskMitigation {...{ experiment }} />
 
-      <TableAudience {...{ experiment }} />
+      <TableAudience {...{ experiment, showRecipe, setShowRecipe }} />
       {status.launched && (
         <Card className="border-left-0 border-right-0 border-bottom-0">
           <Card.Header as="h5" data-testid="summary-page-signoff-launched">

@@ -240,7 +240,9 @@ describe("SidebarActions", () => {
   it("scrolls to json when preview recipe json button is clicked", async () => {
     const experiment = mockExperiment({ isArchived: false, canArchive: true });
     const refetch = jest.fn();
-    render(<Subject {...{ experiment, refetch }} />);
+    const setShowRecipe = jest.fn();
+
+    render(<Subject {...{ experiment, refetch, setShowRecipe }} />);
 
     const jsonButton = await screen.findByTestId("button-recipe-json");
 

@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Accordion, Button, Card, Table } from "react-bootstrap";
 import { Code } from "src/components/Code";
 import NotSet from "src/components/NotSet";
@@ -15,16 +15,35 @@ import { NimbusExperimentApplicationEnum } from "src/types/globalTypes";
 
 type TableAudienceProps = {
   experiment: getExperiment_experimentBySlug;
+  showRecipe: boolean;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // `<tr>`s showing optional fields that are not set are not displayed.
 
-const TableAudience = ({ experiment }: TableAudienceProps) => {
+const TableAudience = ({
+  experiment,
+  showRecipe,
+  setShowRecipe,
+}: TableAudienceProps) => {
   const { firefoxVersions, channels, targetingConfigs } = useConfig();
   const isDesktop =
     experiment.application === NimbusExperimentApplicationEnum.DESKTOP;
 
   const [expand, setExpand] = useState(false);
+
+  useEffect(() => {
+    if (showRecipe) {
+      setExpand(true);
+    } else {
+      setExpand(false);
+    }
+  }, [showRecipe]);
+
+  const handleRecipeToggle = () => {
+    setExpand(!expand);
+    setShowRecipe(!showRecipe);
+  };
 
   return (
     <Card className="border-left-0 border-right-0 border-bottom-0">
@@ -165,41 +184,40 @@ const TableAudience = ({ experiment }: TableAudienceProps) => {
                 </th>
                 <td colSpan={3} data-testid="experiment-recipe-json">
                   <Accordion>
-                    <Accordion.Toggle
-                      as={Accordion}
-                      eventKey="0"
-                      onClick={() => setExpand(!expand)}
-                    >
-                      {expand ? (
-                        <>
-                          <div className="float-right">
-                            <Button size="sm" variant="outline-primary">
-                              <CollapseMinus />
-                              Hide
-                            </Button>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="float-right">
-                            <Button size="sm" variant="outline-primary">
-                              <ExpandPlus />
-                              Show More
-                            </Button>
-                          </div>
-                          <Code
-                            codeString={
-                              experiment.recipeJson.substring(0, 30) +
-                              "\n    ..."
-                            }
-                          />
-                        </>
-                      )}
-                    </Accordion.Toggle>
-
-                    <Accordion.Collapse eventKey="0">
-                      <Code codeString={experiment.recipeJson} />
-                    </Accordion.Collapse>
+                    {expand ? (
+                      <>
+                        <div className="float-right">
+                          <Button
+                            size="sm"
+                            onClick={handleRecipeToggle}
+                            variant="outline-primary"
+                          >
+                            <CollapseMinus />
+                            Hide
+                          </Button>
+                        </div>
+                        <Code codeString={experiment.recipeJson} />
+                      </>
+                    ) : (
+                      <>
+                        <div className="float-right">
+                          <Button
+                            size="sm"
+                            onClick={handleRecipeToggle}
+                            variant="outline-primary"
+                          >
+                            <ExpandPlus />
+                            Show More
+                          </Button>
+                        </div>
+                        <Code
+                          codeString={
+                            experiment.recipeJson.substring(0, 30) + "\n    ..."
+                          }
+                        />
+                      </>
+                    )}
+                    {/* {(expand || showRecipe ) && } */}
                   </Accordion>
                 </td>
               </tr>

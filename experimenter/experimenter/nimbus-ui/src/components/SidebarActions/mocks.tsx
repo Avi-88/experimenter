@@ -18,12 +18,14 @@ export const Subject = ({
   mocks = [],
   status,
   analysis,
+  setShowRecipe,
 }: RouteComponentProps & {
   experiment?: Partial<getExperiment_experimentBySlug>;
   refetch?: () => Promise<any>;
   mocks?: MockedResponse[];
   status?: StatusCheck;
   analysis?: AnalysisData;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { mock, experiment } = mockExperimentQuery(
     "my-special-slug",
@@ -38,6 +40,7 @@ export const Subject = ({
           refetch,
           analysis,
           status: status || getStatus(experiment),
+          setShowRecipe,
         }}
       />
     </RouterSlugProvider>

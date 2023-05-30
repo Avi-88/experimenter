@@ -26,6 +26,7 @@ type AppLayoutWithSidebarProps = {
   children: React.ReactNode;
   experiment: getExperiment_experimentBySlug;
   refetch?: () => Promise<any>;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 } & RouteComponentProps;
 
 export const editPages = [
@@ -56,6 +57,7 @@ export const AppLayoutWithSidebar = ({
   testid = "AppLayoutWithSidebar",
   experiment,
   refetch = async () => {},
+  setShowRecipe,
 }: AppLayoutWithSidebarProps) => {
   const { slug } = useParams();
   const { invalidPages, InvalidPagesList } = useReviewCheck(experiment);
@@ -127,7 +129,9 @@ export const AppLayoutWithSidebar = ({
                 </LinkNav>
               ))}
 
-              <SidebarActions {...{ experiment, refetch, status }} />
+              <SidebarActions
+                {...{ experiment, refetch, status, setShowRecipe }}
+              />
             </Nav>
           </nav>
         </Col>

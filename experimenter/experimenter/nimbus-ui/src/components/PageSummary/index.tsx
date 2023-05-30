@@ -38,6 +38,7 @@ const PageSummary = (props: RouteComponentProps) => {
   useExperimentPolling();
 
   const [showLaunchToReview, setShowLaunchToReview] = useState(false);
+  const [showRecipe, setShowRecipe] = useState(false);
   const { invalidPages, InvalidPagesList } = useReviewCheck(experiment);
   const { fieldWarnings } = useReviewCheck(experiment);
 
@@ -206,7 +207,11 @@ const PageSummary = (props: RouteComponentProps) => {
   }
 
   return (
-    <AppLayoutWithExperiment testId="PageSummary" setHead={false}>
+    <AppLayoutWithExperiment
+      testId="PageSummary"
+      setShowRecipe={setShowRecipe}
+      setHead={false}
+    >
       <Head title={`${experiment.name} – ${summaryTitle}`} />
       <h5 className="mb-3">
         Timeline
@@ -299,7 +304,7 @@ const PageSummary = (props: RouteComponentProps) => {
         )}
       </ChangeApprovalOperations>
 
-      <Summary {...{ experiment, refetch }} />
+      <Summary {...{ experiment, refetch, showRecipe, setShowRecipe }} />
     </AppLayoutWithExperiment>
   );
 };

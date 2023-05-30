@@ -2,7 +2,13 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import React from "react";
 import TableAudience from "src/components/Summary/TableAudience";
 import { MockedCache, mockExperimentQuery } from "src/lib/mocks";
@@ -155,16 +161,31 @@ describe("TableAudience", () => {
     });
   });
 
-  it("Renders show button for recipe json", () => {
+  it("Renders show button for recipe json", async () => {
     const { experiment } = mockExperimentQuery("demo-slug");
-    render(<Subject {...{ experiment }} />);
+    const setShowRecipe = jest.fn();
+    const handleClick = jest.spyOn(React, "useState");
+    handleClick.mockImplementation((showRecipe) => [showRecipe, setShowRecipe]);
+    render(<Subject {...{ experiment, setShowRecipe }} />);
     expect(screen.queryByTestId("experiment-recipe-json")).toBeInTheDocument();
     expect(screen.queryByTestId("experiment-recipe-json")).toHaveTextContent(
       "{",
     );
     expect(screen.queryByText("Show More")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Show More"));
-    expect(screen.queryByText("Hide")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(setShowRecipe).toHaveBeenCalled();
+    });
+  });
+
+  it("Sets correct expand state on component mount", async () => {
+    const { experiment } = mockExperimentQuery("demo-slug");
+    const showRecipe = true;
+
+    render(<Subject {...{ experiment, showRecipe }} />);
+    await waitFor(() => {
+      expect(screen.queryByText("Show More")).not.toBeInTheDocument();
+    });
   });
 
   describe("renders 'Locales' row as expected", () => {
@@ -328,10 +349,14 @@ describe("TableAudience", () => {
 
 const Subject = ({
   experiment,
+  showRecipe,
+  setShowRecipe,
 }: {
   experiment: getExperiment_experimentBySlug;
+  showRecipe: boolean;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 }) => (
   <MockedCache>
-    <TableAudience {...{ experiment }} />
+    <TableAudience {...{ experiment, showRecipe, setShowRecipe }} />
   </MockedCache>
 );

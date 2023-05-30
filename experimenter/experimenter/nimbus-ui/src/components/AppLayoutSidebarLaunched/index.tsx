@@ -77,6 +77,7 @@ type AppLayoutSidebarLaunchedProps = {
   analysisError?: Error;
   experiment: getExperiment_experimentBySlug;
   refetch?: () => Promise<any>;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 } & RouteComponentProps;
 
 export const AppLayoutSidebarLaunched = ({
@@ -88,6 +89,7 @@ export const AppLayoutSidebarLaunched = ({
   analysisError,
   experiment,
   refetch = async () => {},
+  setShowRecipe,
 }: AppLayoutSidebarLaunchedProps) => {
   const { slug } = useParams();
   const { primaryOutcomes, secondaryOutcomes } = useOutcomes(experiment);
@@ -236,7 +238,9 @@ export const AppLayoutSidebarLaunched = ({
                   )}
                 </DisabledItem>
               )}
-              <SidebarActions {...{ experiment, refetch, status, analysis }} />
+              <SidebarActions
+                {...{ experiment, refetch, status, analysis, setShowRecipe }}
+              />
             </Nav>
           </nav>
         </Col>

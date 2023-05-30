@@ -38,6 +38,7 @@ type SidebarModifyExperimentProps = {
   refetch: () => Promise<any>;
   status: StatusCheck;
   analysis?: AnalysisData;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 } & RouteComponentProps;
 
 export const SidebarActions = ({
@@ -45,6 +46,7 @@ export const SidebarActions = ({
   refetch,
   status,
   analysis,
+  setShowRecipe,
 }: SidebarModifyExperimentProps) => {
   const {
     slug,
@@ -54,7 +56,7 @@ export const SidebarActions = ({
     riskMitigationLink,
   } = experiment;
   const { documentationLink: configDocumentationLinks } = useConfig();
-  const scrollIntoView = useScrollToLocationHash();
+  useScrollToLocationHash();
   const {
     isLoading: archiveIsLoading,
     callbacks: [onUpdateArchived],
@@ -74,6 +76,10 @@ export const SidebarActions = ({
   useEffect(() => {
     rebuildToolTip();
   }, [archiveDisabled]);
+
+  const handleRecipe = async () => {
+    setShowRecipe(true);
+  };
 
   return (
     <div data-testid={"SidebarActions"}>
@@ -190,7 +196,7 @@ export const SidebarActions = ({
         {recipeJson && (
           <Link
             to={`#recipe-json`}
-            onClick={() => scrollIntoView}
+            onClick={handleRecipe}
             className="mx-1 my-2 nav-item d-block text-dark w-100 font-weight-normal"
             data-testid="button-recipe-json"
           >

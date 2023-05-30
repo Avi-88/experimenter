@@ -20,6 +20,7 @@ export type AppLayoutWithExperimentProps = {
   testId?: string;
   title?: string;
   setHead?: boolean; // set the browser tab title through this component
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 } & RouteComponentProps;
 
 const AppLayoutWithExperiment = ({
@@ -27,6 +28,7 @@ const AppLayoutWithExperiment = ({
   testId = "AppLayoutWithExperiment",
   title,
   setHead = true,
+  setShowRecipe,
 }: AppLayoutWithExperimentProps) => {
   const {
     slug,
@@ -59,6 +61,7 @@ const AppLayoutWithExperiment = ({
         status,
         experiment,
         refetch,
+        setShowRecipe,
       }}
     >
       <section data-testid={testId} id={testId}>
@@ -114,6 +117,7 @@ type LayoutProps = {
   analysisError?: Error;
   experiment: getExperiment_experimentBySlug;
   refetch: () => Promise<any>;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Layout = ({
@@ -124,6 +128,7 @@ const Layout = ({
   analysisError,
   experiment,
   refetch,
+  setShowRecipe,
 }: LayoutProps) =>
   status?.launched ? (
     <AppLayoutSidebarLaunched
@@ -134,12 +139,13 @@ const Layout = ({
         analysisError,
         experiment,
         refetch,
+        setShowRecipe,
       }}
     >
       {children}
     </AppLayoutSidebarLaunched>
   ) : (
-    <AppLayoutWithSidebar {...{ experiment, refetch }}>
+    <AppLayoutWithSidebar {...{ experiment, refetch, setShowRecipe }}>
       {children}
     </AppLayoutWithSidebar>
   );

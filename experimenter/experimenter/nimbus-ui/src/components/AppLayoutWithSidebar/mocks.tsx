@@ -11,8 +11,10 @@ import { getExperiment_experimentBySlug } from "src/types/getExperiment";
 
 export const Subject = ({
   experiment: overrides,
+  setShowRecipe,
 }: RouteComponentProps & {
   experiment?: Partial<getExperiment_experimentBySlug>;
+  setShowRecipe: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const { mock, experiment } = mockExperimentQuery(
     "my-special-slug",
@@ -21,7 +23,7 @@ export const Subject = ({
 
   return (
     <RouterSlugProvider mocks={[mock]} path="/my-special-slug/edit">
-      <AppLayoutWithSidebar {...{ experiment }}>
+      <AppLayoutWithSidebar {...{ experiment, setShowRecipe }}>
         <p data-testid="test-child">Hello, world!</p>
       </AppLayoutWithSidebar>
     </RouterSlugProvider>
