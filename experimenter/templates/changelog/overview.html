@@ -5,10 +5,12 @@
 {% endblock %}
 
 {% block content %}
-    <h1>This is the changes overview template</h1>
+    <h1 class="font-bold">This is the changes overview template</h1>
     <p>Experiment Slug: {{ slug }}</p>
     {% for changelog in changelogs %}
-    <h2>{{ changelog.changed_on }}</h2>
-    <p>{{ changelog.changed_by }}</p>
+    <div class="flex justify-around items-center">
+      <h2 class="underline font-semibold">{{ changelog.changed_on }}</h2>
+      <p>{{ changelog.changed_by }}</p>
+    </div>
   {% endfor %}
 {% endblock %}
