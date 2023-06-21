@@ -67,6 +67,7 @@ django-types = "^0.17.0"
 ruff = "^0.0.239"
 mozilla-nimbus-shared = "^2.4.0"
 django-tailwind = "^3.5.0"
+fontawesomefree = "6.4.0"
 
 [tool.poetry.dev-dependencies]
 rope = "^0.23.0"

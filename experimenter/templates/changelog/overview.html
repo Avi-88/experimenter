@@ -5,12 +5,32 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="font-bold">This is the changes overview template</h1>
-    <p>Experiment Slug: {{ slug }}</p>
-    {% for changelog in changelogs %}
-    <div class="flex justify-around items-center">
-      <h2 class="underline font-semibold">{{ changelog.changed_on }}</h2>
-      <p>{{ changelog.changed_by }}</p>
+    <h1 class="font-bold text-white  text-2xl p-4 bg-purple-800 ">This is the changes overview template</h1>
+    <div class="flex justify-center p-4 flex-col items-center space-y-2">
+      <p class="underline">Experiment Slug: {{ slug }}</p>
+      <ol class="space-y-2">
+      {% for changelog in changelogs %}
+      <li>
+      <div class=" bg-gray-200 w-full rounded-md">
+        <div class="flex justify-start items-center space-x-2 bg-purple-500 p-4 rounded-t-md">
+          <i class="fa-regular fa-calendar h-6 w-6"></i>
+          <h2 class="text-white font-semibold text-xl" >{{ changelog.changed_on }}</h2>
+        </div>
+        <div class="p-4">
+          <div class="flex justify-start items-center space-x-2"> 
+            <i class="fa-regular fa-user"></i>
+            <span class="underline font-semibold">Changed by: </span>
+            <span>{{ changelog.changed_by }}</span>
+          </div>
+          <div class="flex justify-start items-center space-x-2"> 
+            <i class="fa-regular fa-pen-to-square"></i>
+            <span class="underline font-semibold">Change made: </span>
+            <span>{{ changelog.message }}</span>
+          </div>
+        </div>
+        </div>
+      </li>
+        {% endfor %}
+      </ol>
     </div>
-  {% endfor %}
 {% endblock %}

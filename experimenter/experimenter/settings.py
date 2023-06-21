@@ -106,6 +106,8 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "django_browser_reload",
+    # fontawesome
+    "fontawesomefree",
 ]
 
 TAILWIND_APP_NAME = "theme"
