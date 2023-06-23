@@ -5,6 +5,8 @@ from decimal import Decimal
 from typing import Any, Dict
 from urllib.parse import urljoin
 from uuid import uuid4
+from collections import defaultdict
+from datetime import datetime as dt
 
 from django.apps import apps
 from django.conf import settings
@@ -811,6 +813,49 @@ class NimbusExperiment(NimbusConstants, TargetingConstants, FilterMixin, models.
             generate_nimbus_changelog(cloned, user, f"Cloned from {self}")
 
         return cloned
+
+    def transform_changelogs(self):
+        changes_by_date = defaultdict(list)
+        previous_changelog = None
+        changelogs = list(self.changes.all())
+
+        for changelog in changelogs:
+            if previous_changelog:
+                previous_data = previous_changelog.experiment_data
+                current_data = changelog.experiment_data
+                timestamp = changelog.changed_on.strftime("%I:%M:%S %p")
+
+                for field in current_data:
+                    if field != "_updated_date_time":
+                        if current_data[field] != previous_data.get(field):
+                            if field == "published_dto":
+                                change = {
+                                    'change_message': f"{changelog.changed_by.get_full_name()} changed value of {field}",
+                                    'timestamp': timestamp,  # Modified to use time of day
+                                }
+                            else:
+                                change = {
+                                    'change_message': f"{changelog.changed_by.get_full_name()} changed value of {field} from {previous_data.get(field)} to {current_data.get(field)}",
+                                    'timestamp': timestamp,  # Modified to use time of day
+                                }
+                            changes_by_date[changelog.changed_on.date()].append(change)
+
+            previous_changelog = changelog
+
+        # Add first changelog as "Created" if it exists
+        first_changelog = changelogs[0] if changelogs else None
+        if first_changelog:
+            first_timestamp = first_changelog.changed_on.strftime("%I:%M:%S %p")
+            change = {
+                'change_message': f"{first_changelog.changed_by.get_full_name()} created this experiment",
+                'timestamp': first_timestamp,
+            }
+            changes_by_date[first_changelog.changed_on.date()].append(change)
+
+        transformed_changelogs = [{'date': date, 'changes': changes} for date, changes in changes_by_date.items()]
+        sorted_changelogs = sorted(transformed_changelogs, key=lambda x: x['date'], reverse=True)
+
+        return sorted_changelogs    
 
 
 class NimbusBranch(models.Model):

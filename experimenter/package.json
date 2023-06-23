@@ -7,6 +7,7 @@
     "experimenter/nimbus-ui"
   ],
   "dependencies": {
+    "alpinejs": "^3.12.2",
     "react-select": "^4.3.0"
   },
   "devDependencies": {},
